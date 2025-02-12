@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Changed</title>
+</head>
+<body>
+    <h1>Reset Password</h1>
+
+    <!-- This below will help display Error Message Below -->
+
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+      <% } %>
+
+      <!-- This below displays the success message -->
+    
+    <% if (success) { %>
+        <p><%= success %></p>
+        <% } %>
+
+        <!-- This is form for the passowrd Change and the success Message -->
+
+        <form action="/reset" method="post">
+            <!-- Add the user input below -->
+             <p>Username</p>
+             <input type="text" name="username" placeholder="Username" required />
+             <br>
+
+             <p>Password</p>
+             <input type="password"name="password"placeholder="Password" required />
+
+             <br>
+             
+             <p>New Password</p>
+             <input type="password"name="new_password"placeholder="New_Password" required />
+
+             <br>
+
+             <!-- Submit the button -->
+
+             <button type="submit">Reset Password</button> <a href="/login">login</a>
+
+        </form>
+    
+</body>
+</html>
