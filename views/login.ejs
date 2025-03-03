@@ -1,43 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Login Page</h1>
 
     <!-- This below displays the error message -->
 
     <% if (messages.error) { %>
-        <p style="color: rgb(56, 16, 214);"><%= messages.error %></p>
-      <% } %>
+    <p style="color: rgb(56, 16, 214)"><%= messages.error %></p>
+    <% } %>
 
-      <!-- The Login form below -->
+    <!-- The Login form below -->
 
     <form action="/login" method="post">
+      <!-- User Input  -->
+      <p>Username</p>
+      <input type="text" name="username" placeholder="username" required />
+      <br />
+      <p>Password</p>
+      <input type="password" name="password" placeholder="password" required />
 
-        <!-- User Input  -->
-         <p>Username</p>
-         <input type="text" name="username" placeholder="username" required>
-        <br>
-        <p>Password</p>
-        <input type="password" name="password" placeholder="password" required>
+      <br />
 
-        <br>
+      <!-- Add submit button -->
+      <button type="submit">Login</button>
 
-        <!-- Add submit button -->
-         <button type="submit">Login</button>
+      <br />
+      <br />
 
-         <br>
-         <br>
-
-        <a href="/signup">SignUp</a>
-
-
-
+      <a href="/signup">SignUp</a>
     </form>
-    
-</body>
+
+    <%- include("partials/footer") %>
+  </body>
 </html>

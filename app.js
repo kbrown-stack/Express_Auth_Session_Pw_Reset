@@ -2,10 +2,9 @@ const express = require("express");
 const passport = require("passport"); // This works for the authentication
 const connectionEnsureLogin = require("connect-ensure-login"); // This serves as authorisation middleware
 const bodyParser = require("body-parser");
-const flash = require('connect-flash');
+const flash = require("connect-flash");
 
 const userModel = require("./models/users");
-
 
 const session = require("express-session"); // session middlware
 require("dotenv").config(); // This helps to have access to the enviroment variables through the mongoose database
@@ -36,7 +35,7 @@ app.use(
   })
 );
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true })); // This ensures data from the application. 
 
 app.use(passport.initialize()); // This is to initialize passport middleware.
 app.use(passport.session()); // use passport session middleware.
@@ -63,7 +62,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
 //Rendering the EJS files below
 
 //Then this renders the home page
@@ -86,14 +84,27 @@ app.get("/signup", (req, res) => {
 
 // This renders the Reset passwort page
 
-app.get('/reset', (req,res) => {
-  res.render('reset', {error: null, success: null});
+app.get("/reset", (req, res) => {
+  res.render("reset", { error: null, success: null });
 });
 
 // Thhis below handles the signup registration  request for new users
 
 app.post("/signup", (req, res) => {
   const user = req.body;
+
+  // This is to Validate email and password
+  if (!user.email || !user.username || !user.password) {
+    return res.status(400).send("Email, username, and password are required.");
+  }
+
+  // You could add more email validation here, like regex pattern matching for valid email
+  // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // if (!emailRegex.test(user.email)) {
+  //   return res.status(400).send("Invalid email format.");
+  // }
+
+// This below takes you to register the user
   userModel.register(
     new userModel({ username: user.username, email: user.email }),
     user.password,
@@ -101,7 +112,7 @@ app.post("/signup", (req, res) => {
       // this saves username and pass to mongo db database.
       if (err) {
         console.log(err);
-        res.status(400).send(err);
+        res.status(400).send("Error while registring: " + err.message);
       } else {
         passport.authenticate("local")(req, res, () => {
           res.redirect("/books");
@@ -115,8 +126,10 @@ app.post("/signup", (req, res) => {
 
 app.post(
   "/login",
-  passport.authenticate("local", { failureRedirect: "/login" ,  // This redirects you back to login page on failure.
-    failureFlash: "Invalid username or password", }),  // This displays message for invalid login.
+  passport.authenticate("local", {
+    failureRedirect: "/login", // This redirects you back to login page on failure.
+    failureFlash: "Invalid username or password",
+  }), // This displays message for invalid login.
   (req, res) => {
     // middleware while setting strategy as local
     res.redirect("/books");
@@ -135,43 +148,53 @@ app.post("/logout", (req, res, next) => {
 });
 
 // This below handles the reset request
-// this is the reset code. we need to respond to i 
 
-app.post('/reset', async (req, res) => {
+app.post("/reset", async (req, res) => {
   try {
     const { username, password, new_password } = req.body;
 
     // Finding the user by username
     const user = await userModel.findOne({ username });
     if (!user) {
-      return res.render('reset', { error: 'User not found', success: null });
+      return res.render("reset", { error: "User not found", success: null });
     }
+
+        // Set new password
+        await user.setPassword(new_password);
+        await user.save();
 
     // This is to Change the password!
     user.changePassword(password, new_password, (err) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
 
         // This helps to handle incorrect current passpword.
 
-        if (err.name === 'IncorrectPasswordError') {
-          return res.render('reset', { error: 'Current password is incorrect', success: null });
+        if (err.name === "IncorrectPasswordError") {
+          return res.render("reset", {
+            error: "Current password is incorrect",
+            success: null,
+          });
         }
 
         // Handling other errors
-           return res.render('reset', { error: 'Incorrect current password', success: null });
+        return res.render("reset", {
+          error: "Incorrect current password",
+          success: null,
+        });
       }
 
-// When successful render this message below
-      return res.render('reset', { error: null, success: 'Password successfully changed' });
+      // When successful render this message below
+      return res.render("reset", {
+        error: null,
+        success: "Password successfully changed",
+      });
     });
   } catch (err) {
     console.error(err);
-    res.render('reset', { error: 'An error occurred', success: null });
+    res.render("reset", { error: "An error occurred", success: null });
   }
 });
-
-
 
 // This below catches the error thrown when loging in as error middleware
 

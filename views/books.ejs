@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Books</title>
-</head>
-<body>
-    <h1>Books</h1>
+  </head>
+  <body>
+    <h1>Book Library</h1>
     <!-- This page shows the user the books and logs them out using EJS -->
-
     <% if (user) { %>
-        <p>Welcome <%= user.username %> to our secret book List</p>
-        <p>Below is the list of books</p>
-        <ul>
-           <% books.forEach(function(book) { %>
-           <li><%= book.title %></li>
-           <% }); %>
-        </ul>
+    <p>Welcome <%= user.username %> to our Book Library Page</p>
+    <p>Below is the list of books</p>
+    <ul>
+      <% books.forEach(function(book) { %>
+      <li><%= book.title %></li>
+      <% }); %>
+    </ul>
 
-        <br>
+    <br />
 
-        <form action="/logout" method="post">
-        <button type="submit">Logout</button>
+    <form action="/logout" method="post">
+      <button type="submit">Logout</button>
     </form>
 
     <% } else { %>
     <p>Please <a href="/login">login</a>to view the Book list</p>
-    <% } %>
-</body>
+    <% } %> <%- include("partials/footer") %>
+  </body>
 </html>

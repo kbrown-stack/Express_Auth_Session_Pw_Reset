@@ -1,3 +1,5 @@
+// This file is for the user schema 
+
 const { default: mongoose } = require('mongoose');
 const moogoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
